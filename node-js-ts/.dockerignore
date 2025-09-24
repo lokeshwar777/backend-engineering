@@ -1,0 +1,21 @@
+# Ignore dependencies (they will be installed inside the container)
+node_modules
+
+# Ignore environment files (you’re using env_file in docker-compose)
+.env
+
+# Ignore Git repository data
+.git
+.gitignore
+
+# Ignore log files
+*.log
+logs/
+npm-debug.log*
+
+# Optional: editor/project files
+.DS_Store
+.vscode
+.idea
+
+dist

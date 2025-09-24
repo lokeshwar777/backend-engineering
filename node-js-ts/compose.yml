@@ -1,0 +1,21 @@
+services:
+
+  # service name
+  backend:
+    # execute the Dockerfile at the location (current)
+    build: .
+
+    # map[host port]<->[container port]
+    ports:
+      - "3000:3000"
+
+    # mapping/linking directories & files for live changes
+    volumes:
+      # mount cur dir from host with code inside container
+      - .:/code # [host dir]: [container dir path]
+      # exception or not link, create anonymous volume for the specified path in container
+      - /code/node_modules
+
+    # env file location injected only during container runtime
+    env_file:
+      - .env

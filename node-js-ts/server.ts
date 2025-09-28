@@ -1,25 +1,14 @@
 import { config } from "@dotenvx/dotenvx";
-("@dotenvx/dotenvx/config");
-import http from "node:http";
+import { startApp } from "./app.js";
+import { connectToDB } from "./db/connectDB.js";
 
+// env variables injection config
 config({
 	ignore: ["MISSING_ENV_FILE"],
 });
 
-const PORT = process.env.PORT;
+// db connection
+connectToDB();
 
-const server = http.createServer();
-
-// server.on("request", (req, res) => {
-// 	console.log("request recieved", req);
-// 	res.write("request written \n");
-// 	res.end("end of response");
-// });
-
-// server.on("error", (err) => {
-// 	console.log("error", err);
-// });
-
-server.listen(PORT, () => {
-	console.log(`⚙️ Server listening on PORT :${PORT}!!`);
-});
+// start listening on express server
+startApp();

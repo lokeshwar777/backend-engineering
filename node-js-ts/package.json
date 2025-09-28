@@ -6,7 +6,12 @@
 	"scripts": {
 		"dev": "npx tsx server.ts",
 		"dev:watch": "npx tsx watch server.ts",
-		"test": "echo \"Error: no test specified\" && exit 1"
+		"build": "tsc",
+		"docker:up": "docker compose -f docker-compose.dev.yml up --build",
+		"docker:down": "docker compose -f docker-compose.dev.yml down",
+		"start": "node dist/server.js",
+		"docker:prod:up": "docker compose -f docker-compose.prod.yml up --build -d",
+		"docker:prod:down": "docker compose -f docker-compose.prod.yml down"
 	},
 	"keywords": [],
 	"author": "",
@@ -14,7 +19,8 @@
 	"type": "module",
 	"devDependencies": {
 		"@types/node": "^24.5.2",
-		"tsx": "^4.20.5"
+		"tsx": "^4.20.5",
+		"typescript": "^5.9.2"
 	},
 	"dependencies": {
 		"@dotenvx/dotenvx": "^1.51.0"

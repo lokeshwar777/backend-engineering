@@ -1,9 +1,11 @@
 services:
 
   # service name
-  backend:
-    # execute the Dockerfile at the location (current)
-    build: .
+  backend-dev:
+    # execute the Dockerfile at the context location till the target
+    build:
+      context: .
+      target: dev
 
     # map[host port]<->[container port]
     ports:

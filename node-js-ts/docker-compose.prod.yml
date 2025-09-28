@@ -1,0 +1,21 @@
+services:
+
+  # service name
+  backend-prod:
+    # execute the Dockerfile at the context location till the target
+    build:
+      context: .
+      target: prod
+
+    # execute the Dockerfile at the context location completely
+    # build: .
+
+    # map[host port]<->[container port]
+    ports:
+      - "3000:3000"
+
+    # env file location injected only during container runtime
+    env_file:
+      - .env
+
+    command: npm run start

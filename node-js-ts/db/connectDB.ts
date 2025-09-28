@@ -3,29 +3,40 @@ import mongoose from "mongoose";
 const DB_URI = process.env.DATABASE_URI!; // guarantee its presence
 const DB_NAME = process.env.DATABASE_NAME;
 
-let isConnected = false;
+const DBConnection: GlobalMongoose = global.mongoose ?? { conn: null, promise: null };
+global.mongoose = DBConnection;
 
 export const connectToDB = async () => {
-	if (isConnected) {
+	console.log("Connecting to DB ...");
+
+	// check for cached connection instance
+	if (DBConnection.conn) {
 		console.log(
-			`DB already connected, so using existing instance : ${mongoose.connection.name}`
+			`cached DB exists, so using existing it! \nDatabase name : ${DBConnection.conn.connection.name}`
 		);
-		return mongoose.connection;
+		return DBConnection.conn;
+	}
+
+	// store a new connection in the promise (if not present)
+	if (!DBConnection.promise) {
+		const bufferedConnection = mongoose.connect(DB_URI, {
+			dbName: DB_NAME,
+			bufferCommands: false,
+		});
+		DBConnection.promise = bufferedConnection;
 	}
 
 	try {
-		const mongooseInstance = await mongoose.connect(DB_URI, {
-			dbName: DB_NAME,
-		});
+		DBConnection.conn = await DBConnection.promise;
+		console.log(
+			`Successfully connected to MongoDB 📦!!! \nDatabase name : ${DBConnection.conn.connection.name}`
+		);
 
-		console.log(`Successfully connected to MongoDB 📦!!!, ${mongoose.connection.name}`);
-		// console.log(`Mongoose Instance : ${mongooseInstance}`);
-
-		isConnected = true;
-		return mongoose.connection;
+		return DBConnection.conn;
 	} catch (error) {
 		console.log(`Error connecting to DB, ERROR:${error}`);
-		isConnected = false;
-		process.exit(1);
+		DBConnection.conn = null;
+		DBConnection.promise = null;
+		throw error;
 	}
 };

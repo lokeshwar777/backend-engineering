@@ -7,8 +7,15 @@ config({
 	ignore: ["MISSING_ENV_FILE"],
 });
 
-// db connection
-connectToDB();
+async function main() {
+	// db connection
+	await connectToDB();
 
-// start listening on express server
-startApp();
+	// start listening on express server
+	startApp();
+}
+
+main().catch((error) => {
+	console.error(`failed to start app, ERROR: ${error}`);
+	process.exit(1);
+});

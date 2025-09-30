@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const DB_URI = process.env.DATABASE_URI!; // guarantee its presence
+const DB_URI = process.env.MONGODB_URI!; // guarantee its presence
 const DB_NAME = process.env.DATABASE_NAME;
 
 const DBConnection: GlobalMongoose = global.mongoose ?? { conn: null, promise: null };

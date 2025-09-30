@@ -19,3 +19,37 @@ services:
       - .env
 
     command: npm run start
+
+    depends_on:
+      - mongo
+
+    environment:
+      - MONGODB_URI=mongodb://${MONGODB_USERNAME}:${MONGODB_PASSWORD}@mongo:27017?authSource=admin
+
+  mongo:
+    image: mongo:8.0.14-noble
+    # restart: always # simple but not recommended
+    ports: [] # "27017:27017" is not needed as backend can access it at mongo:27017
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGODB_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGODB_PASSWORD}
+    volumes:
+      - mongo_data:/data/db
+    logging:
+      driver: json-file
+      options:
+        max-size: 50m
+        max-file: 5
+    deploy:
+      resources:
+        limits:
+          cpus: 1
+          memory: 2G
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 1m
+
+volumes:
+  mongo_data:

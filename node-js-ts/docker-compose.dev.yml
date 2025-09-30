@@ -1,23 +1,56 @@
 services:
-
   # service name
   backend-dev:
     # execute the Dockerfile at the context location till the target
     build:
       context: .
       target: dev
-
     # map[host port]<->[container port]
     ports:
       - "3000:3000"
-
     # mapping/linking directories & files for live changes
     volumes:
-      # mount cur dir from host with code inside container
+      # mount cur dir from host with code inside container for live-reload
       - .:/code # [host dir]: [container dir path]
       # exception or not link, create anonymous volume for the specified path in container
       - /code/node_modules
-
     # env file location injected only during container runtime
     env_file:
       - .env
+    depends_on:
+      - mongo
+    # these overwrite env vars in `.env` file (no matter what the order of lines is)
+    environment:
+      #         protocol://username:password@hostname:PORT?authentication
+      MONGODB_URI: mongodb://${MONGODB_USERNAME}:${MONGODB_PASSWORD}@mongo:27017?authSource=admin
+
+  mongo:
+    image: mongo:8.0.14-noble
+    # disable logging inside docker container
+    command: [ "mongod", "--quiet", "--logpath", "/dev/null" ]
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGODB_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGODB_PASSWORD}
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: 3
+    deploy:
+      resources:
+        limits:
+          cpus: 0.5
+          memory: 512M
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 1m
+
+# persist DB storage across containers
+volumes:
+  mongo_data:

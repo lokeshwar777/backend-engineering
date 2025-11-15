@@ -26,8 +26,8 @@ services:
 
   mongo:
     image: mongo:8.0.14-noble
-    # disable logging inside docker container
-    command: [ "mongod", "--quiet", "--logpath", "/dev/null" ]
+    # redirect logging to a log file instead of displaying inside docker container
+    command: [ "mongod", "--quiet", "--logpath", "/data/db/mongo.log", "--logappend" ]
     environment:
       - MONGO_INITDB_ROOT_USERNAME=${MONGODB_USERNAME}
       - MONGO_INITDB_ROOT_PASSWORD=${MONGODB_PASSWORD}

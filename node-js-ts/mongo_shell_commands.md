@@ -20,15 +20,27 @@
     })
     ```
 
+- localhost exception - simply restart mongodb container
+
 ## executed
 
 - `mongosh -u user -p pass --authenticationDatabase admin`
+- create admin
+
+    ```mongodb
+    db.createUser({
+        user: "administrator",
+        pwd: "lokeshwar777",
+        roles: [{ role: "root", db: "admin" }]
+    })
+    ```
+
 - create user
 
     ```mongodb
     db.createUser({
         user: "loki",
         pwd: "reddy",
-        roles: [{ role: "root", db: "node-js-ts" }]
+        roles: [{ role: "dbOwner", db: "admin" }]
     })
     ```

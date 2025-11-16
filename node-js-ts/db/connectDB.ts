@@ -1,9 +1,10 @@
 import mongoose from "mongoose";
+import { DATABASE_NAME, MONGODB_URI } from "../constants/index.js";
 
-const DB_URI = process.env.MONGODB_URI!; // guarantee its presence
-const DB_NAME = process.env.DATABASE_NAME;
-
-const DBConnection: GlobalMongoose = global.mongoose ?? { conn: null, promise: null };
+const DBConnection: GlobalMongoose = global.mongoose ?? {
+	conn: null,
+	promise: null,
+};
 global.mongoose = DBConnection;
 
 export const connectToDB = async () => {
@@ -19,8 +20,9 @@ export const connectToDB = async () => {
 
 	// store a new connection in the promise (if not present)
 	if (!DBConnection.promise) {
-		const bufferedConnection = mongoose.connect(DB_URI, {
-			dbName: DB_NAME,
+		// guarantee URI presence
+		const bufferedConnection = mongoose.connect(MONGODB_URI!, {
+			dbName: DATABASE_NAME,
 			bufferCommands: false,
 		});
 		DBConnection.promise = bufferedConnection;

@@ -1,8 +1,8 @@
 import { Router } from "express";
-import todoRouter from "./todo.route.js";
+import resourceRouter from "./resource.route.js";
 
 const apiRouter = Router();
 
-apiRouter.use("/todos", todoRouter);
+apiRouter.use("/resources", resourceRouter);
 
 export default apiRouter;

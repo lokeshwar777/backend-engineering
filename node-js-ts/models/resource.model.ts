@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const todoSchema = new mongoose.Schema(
+const resourceSchema = new mongoose.Schema(
 	{
 		title: {
 			type: String,
@@ -19,5 +19,6 @@ const todoSchema = new mongoose.Schema(
 	{ timestamps: true },
 );
 
-// stored is mongoDB as todos collection (lowercase plural form)
-export const Todo = mongoose.models.Todo || mongoose.model("Todo", todoSchema);
+// stored is mongoDB as resources collection (lowercase plural form)
+export const Resource =
+	mongoose.models.Resource || mongoose.model("Resource", resourceSchema);

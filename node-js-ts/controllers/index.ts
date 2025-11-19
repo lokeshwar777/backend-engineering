@@ -1,1 +1,1 @@
-export { todoHandlers } from "./todo.controller.js";
+export { resourceHandlers } from "./resource.controller.js";

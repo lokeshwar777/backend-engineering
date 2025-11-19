@@ -1,6 +1,6 @@
-import { Todo } from "../models/todo.model.js";
+import { Todo } from "../models/index.js";
 
-const addTodo = async (title: string, description: string) => {
+const addTodo = async (title: string, description: string): Promise<void> => {
 	let newTodo = null;
 	try {
 		newTodo = await Todo.create({ title, description });
@@ -11,19 +11,21 @@ const addTodo = async (title: string, description: string) => {
 	return newTodo;
 };
 
-const fetchTodos = async () => {
-	let todos = null;
+const fetchTodos = async (): Promise<InstanceType<typeof Todo>[]> => {
 	try {
-		todos = await Todo.find();
+		return await Todo.find();
 	} catch (error) {
-		console.error(`Error occurred while retrieving todos from DB: ${error}`);
+		console.error(
+			`Error occurred while retrieving todos from DB: ${error}`,
+		);
 		throw error;
 	}
-	return todos;
 };
 
-const fetchTodo = async (id: string) => {
-	let todo = null;
+const fetchTodo = async (
+	id: string,
+): Promise<InstanceType<typeof Todo> | null> => {
+	let todo: InstanceType<typeof Todo> | null = null;
 	try {
 		todo = await Todo.findById(id); // same as findOne({ _id : id })
 	} catch (error) {
@@ -33,8 +35,13 @@ const fetchTodo = async (id: string) => {
 	return todo;
 };
 
-const changeTodo = async (id: string, title: string, description: string) => {
-	let changedTodo = null;
+const changeTodo = async (
+	id: string,
+	title: string,
+	description: string,
+): Promise<InstanceType<typeof Todo> | null> => {
+	let changedTodo: InstanceType<typeof Todo> | null = null;
+
 	try {
 		changedTodo = await Todo.findByIdAndUpdate(
 			id, // same as { _id : id}
@@ -42,7 +49,7 @@ const changeTodo = async (id: string, title: string, description: string) => {
 			{
 				new: true, // new returns the updated doc else older
 				runValidators: true,
-			}
+			},
 		);
 	} catch (error) {
 		console.error(`Error occurred while changing todo in DB: ${error}`);
@@ -51,8 +58,10 @@ const changeTodo = async (id: string, title: string, description: string) => {
 	return changedTodo;
 };
 
-const removeTodo = async (id: string) => {
-	let deletedTodo = null;
+const removeTodo = async (
+	id: string,
+): Promise<InstanceType<typeof Todo> | null> => {
+	let deletedTodo: InstanceType<typeof Todo> | null = null;
 	try {
 		deletedTodo = await Todo.findByIdAndDelete(id);
 	} catch (error) {
@@ -62,4 +71,10 @@ const removeTodo = async (id: string) => {
 	return deletedTodo;
 };
 
-export default { addTodo, fetchTodos, fetchTodo, changeTodo, removeTodo };
+export const todoService = {
+	addTodo,
+	fetchTodos,
+	fetchTodo,
+	changeTodo,
+	removeTodo,
+};

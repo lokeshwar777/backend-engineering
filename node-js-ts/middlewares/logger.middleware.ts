@@ -67,7 +67,7 @@ const httpLogger = pinoHttp({
 		request: () => undefined,
 		response: () => undefined,
 		err: (err) => {
-			const base: { [key: string]: unknown } = {
+			const base: Record<string, unknown> = {
 				name: err.name ?? err.type,
 				message: err.message,
 				statusCode: err.statusCode,

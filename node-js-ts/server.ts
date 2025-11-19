@@ -7,7 +7,7 @@ config({
 	ignore: ["MISSING_ENV_FILE"],
 });
 
-async function main() {
+async function main(): Promise<void> {
 	// db connection
 	await connectToDB();
 

@@ -3,6 +3,7 @@ import apiRouter from "./routes/index.js";
 import { httpLogger } from "./middlewares/logger.middleware.js";
 import { jsonErrorResponder } from "./middlewares/jsonErrorResponder.js";
 import { globalErrorHandler } from "./middlewares/error.middleware.js";
+import type { Server } from "http";
 
 const PORT = process.env.PORT;
 
@@ -26,7 +27,7 @@ app.use("/api/v1", apiRouter);
 app.use(jsonErrorResponder); // use if needed to handle client side JSON errors
 app.use(globalErrorHandler); // handle HTML & non-JSON errors
 
-export const startApp = () =>
+export const startApp = (): Server =>
 	app.listen(PORT, () => {
 		console.log(`⚙️ Server listening on PORT :${PORT}!!`);
 	});

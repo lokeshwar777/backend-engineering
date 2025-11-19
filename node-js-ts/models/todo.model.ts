@@ -16,7 +16,7 @@ const todoSchema = new mongoose.Schema(
 			default: false,
 		},
 	},
-	{ timestamps: true }
+	{ timestamps: true },
 );
 
 // stored is mongoDB as todos collection (lowercase plural form)

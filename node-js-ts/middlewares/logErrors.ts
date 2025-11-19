@@ -6,7 +6,7 @@ export const logErrors: ErrorRequestHandler = (
 	err: unknown,
 	req: Request,
 	_,
-	next: NextFunction
+	next: NextFunction,
 ) => {
 	// if not using `pino-http`
 	// const reqLogger = logger.child({ url: req.url, method: req.method });
@@ -22,13 +22,13 @@ export const logErrors: ErrorRequestHandler = (
 	if (err instanceof APIError) {
 		reqLogger.error(
 			{ message: err.message, statusCode: err.statusCode },
-			"[API Error]"
+			"[API Error]",
 		);
 	} else if (err instanceof Error) {
 		// log full error stack tree if present
 		reqLogger.error(
 			{ name: err.name, stack: err.stack },
-			"[Unhandled Error]"
+			"[Unhandled Error]",
 		);
 	} else {
 		// simply log error

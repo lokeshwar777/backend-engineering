@@ -11,7 +11,7 @@ export const jsonErrorResponder: ErrorRequestHandler = (
 	err: unknown,
 	req: Request,
 	res: Response,
-	next: NextFunction
+	next: NextFunction,
 ) => {
 	// xhr = XMLHttpRequest (AJAX), req.headers is for fetch API -> `Content-Type`:'application/json`
 	const expectsJSON =

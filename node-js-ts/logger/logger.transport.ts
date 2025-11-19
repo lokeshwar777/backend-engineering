@@ -5,7 +5,7 @@ import { isProd, LOG_LEVEL } from "../constants/index.js";
 
 const __dirname = import.meta.dirname;
 const absoluteLogFilePath = path.normalize(
-	path.join(__dirname, "..", "logs", "output.log")
+	path.join(__dirname, "..", "logs", "output.log"),
 );
 
 const target: string = isProd ? "pino/file" : "pino-pretty";

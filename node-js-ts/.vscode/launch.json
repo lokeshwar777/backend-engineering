@@ -2,12 +2,13 @@
 	"version": "0.2.0",
 	"configurations": [
 		{
-			"name": "dev watch",
+			"name": "Debug: Backend (tsx server.ts)",
 			"type": "node",
 			"request": "launch",
-			"runtimeExecutable": "npm",
-			"runtimeArgs": ["run", "dev:watch"],
-			"console": "internalConsole"
+			"runtimeExecutable": "tsx",
+			"args": ["watch", "--env-file=.env", "server.ts"],
+			"cwd": "${workspaceFolder}",
+			"skipFiles": ["<node_internals>/**"]
 		}
 	]
 }

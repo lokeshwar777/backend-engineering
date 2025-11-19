@@ -1,10 +1,4 @@
-import type {
-	Request,
-	Response,
-	ErrorRequestHandler,
-	NextFunction,
-} from "express";
-APIError;
+import type { Request, Response, ErrorRequestHandler } from "express";
 import { ERRORS } from "../constants/index.js";
 import APIError from "../utils/apiError.js";
 
@@ -12,7 +6,6 @@ export const globalErrorHandler: ErrorRequestHandler = (
 	err: unknown,
 	req: Request,
 	res: Response,
-	next: NextFunction
 ): void => {
 	const error = err instanceof APIError ? err : ERRORS.INTERNAL_SERVER_ERROR;
 

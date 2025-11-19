@@ -18,7 +18,7 @@ export default class APIResponse {
 		success = true,
 		statusCode = 200,
 		data = {},
-		meta?: unknown
+		meta?: unknown,
 	) {
 		this.message = message;
 		this.success = success;

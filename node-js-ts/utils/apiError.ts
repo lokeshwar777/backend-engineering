@@ -15,7 +15,7 @@ export default class APIError extends Error {
 		message: string,
 		statusCode = 500,
 		errorCode?: string,
-		details?: unknown
+		details?: unknown,
 	) {
 		super(message);
 		this.name = this.constructor.name; // constructor.name is same as class name

@@ -5,18 +5,18 @@ export const ERRORS = {
 	INVALID_TOKEN: new APIError("Invalid Token", 403, "INVALID_TOKEN"),
 	USER_NOT_FOUND: new APIError("User Not Found", 404, "USER_NOT_FOUND"),
 
-	ZOD_VALIDATION_ERROR: (fieldErrors: Object): APIError =>
+	ZOD_VALIDATION_ERROR: (fieldErrors: object): APIError =>
 		new APIError(
 			"Zod Validation Error",
 			400,
 			"ZOD_VALIDATION_ERROR",
-			fieldErrors
+			fieldErrors,
 		),
 
 	INTERNAL_SERVER_ERROR: new APIError(
 		"Internal Server Error",
 		500,
-		"INTERNAL_SERVER_ERROR"
+		"INTERNAL_SERVER_ERROR",
 	),
 
 	// TODO : add more

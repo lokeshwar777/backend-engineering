@@ -7,13 +7,13 @@ const DBConnection: GlobalMongoose = global.mongoose ?? {
 };
 global.mongoose = DBConnection;
 
-export const connectToDB = async () => {
+export const connectToDB = async (): Promise<typeof mongoose> => {
 	console.log("Connecting to DB ...");
 
 	// check for cached connection instance
 	if (DBConnection.conn) {
 		console.log(
-			`cached DB exists, so using existing it! \nDatabase name : ${DBConnection.conn.connection.name}`
+			`cached DB exists, so using existing it! \nDatabase name : ${DBConnection.conn.connection.name}`,
 		);
 		return DBConnection.conn;
 	}
@@ -31,7 +31,7 @@ export const connectToDB = async () => {
 	try {
 		DBConnection.conn = await DBConnection.promise;
 		console.log(
-			`Successfully connected to MongoDB 📦!!! \nDatabase name : ${DBConnection.conn.connection.name}`
+			`Successfully connected to MongoDB 📦!!! \nDatabase name : ${DBConnection.conn.connection.name}`,
 		);
 
 		return DBConnection.conn;

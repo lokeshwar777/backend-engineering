@@ -1,8 +1,8 @@
 import mongoose from "mongoose";
-import { Request, Response } from "express";
-import todoService from "../services/todo.service.js";
+import type { Request, Response } from "express";
+import { todoService } from "../services/index.js";
 
-const createTodo = async (req: Request, res: Response) => {
+const createTodo = async (req: Request, res: Response): Promise<void> => {
 	const { title, description } = req.body;
 	try {
 		const newTodo = await todoService.addTodo(title, description);
@@ -21,7 +21,7 @@ const createTodo = async (req: Request, res: Response) => {
 	}
 };
 
-const getTodos = async (req: Request, res: Response) => {
+const getTodos = async (req: Request, res: Response): Promise<void> => {
 	try {
 		const todos = await todoService.fetchTodos();
 		res.status(200).json({
@@ -39,21 +39,22 @@ const getTodos = async (req: Request, res: Response) => {
 	}
 };
 
-const getTodo = async (req: Request, res: Response) => {
+const getTodo = async (req: Request, res: Response): Promise<void> => {
 	const todoId = req.params?.id;
 	if (!todoId || !mongoose.Types.ObjectId.isValid(todoId)) {
 		// BAD REQUEST
-		return res.status(400).json({
+		res.status(400).json({
 			success: false,
 			error: "Invalid todo id, unable to fetch!",
 		});
+		return;
 	}
 	try {
 		const todo = await todoService.fetchTodo(todoId);
 		if (!todo) {
-			return res.status(404).json({
+			res.status(404).json({
 				success: false,
-				message: "TODO not found!",
+				message: "Todo Not Found!",
 			});
 		}
 		res.status(200).json({
@@ -62,29 +63,37 @@ const getTodo = async (req: Request, res: Response) => {
 			data: todo,
 		});
 	} catch (error) {
-		console.error(`Error occurred while fetching todo: ${error}`);
+		console.error(`Error occurred while fetching todos: ${error}`);
 		res.status(500).json({
 			success: false,
-			error: "Error retrieving todo",
+			error: "Error retrieving todos",
 		});
 		throw error;
 	}
 };
 
-const editTodo = async (req: Request, res: Response) => {
+const editTodo = async (req: Request, res: Response): Promise<void> => {
 	const todoId = req.params?.id;
 	if (!todoId || !mongoose.Types.ObjectId.isValid(todoId)) {
 		// BAD REQUEST
-		return res.status(400).json({
+		res.status(400).json({
 			success: false,
 			error: "Invalid todo id, unable to edit!",
 		});
 	}
 	const { title: newTitle, description: newDescription } = req.body;
 	try {
-		const editedTodo = await todoService.changeTodo(todoId, newTitle, newDescription);
+		const editedTodo = await todoService.changeTodo(
+			todoId,
+			newTitle,
+			newDescription,
+		);
 		if (!editedTodo) {
-			return res.status(404).json({ success: false, message: "TODO not found!" });
+			res.status(404).json({
+				success: false,
+				message: "TODO not found!",
+			});
+			return;
 		}
 		res.status(200).json({
 			success: true,
@@ -101,20 +110,29 @@ const editTodo = async (req: Request, res: Response) => {
 	}
 };
 
-const replaceTodo = async (req: Request, res: Response) => {
+const replaceTodo = async (req: Request, res: Response): Promise<void> => {
 	const todoId = req.params?.id;
 	if (!todoId || !mongoose.Types.ObjectId.isValid(todoId)) {
 		// BAD REQUEST
-		return res.status(400).json({
+		res.status(400).json({
 			success: false,
 			error: "Invalid todo id, unable to replace!",
 		});
+		return;
 	}
 	const { title: newTitle, description: newDescription } = req.body;
 	try {
-		const editedTodo = await todoService.changeTodo(todoId, newTitle, newDescription);
+		const editedTodo = await todoService.changeTodo(
+			todoId,
+			newTitle,
+			newDescription,
+		);
 		if (!editedTodo) {
-			return res.status(404).json({ success: false, message: "TODO not found!" });
+			res.status(404).json({
+				success: false,
+				message: "TODO not found!",
+			});
+			return;
 		}
 		res.status(200).json({
 			success: true,
@@ -131,21 +149,29 @@ const replaceTodo = async (req: Request, res: Response) => {
 	}
 };
 
-const deleteTodo = async (req: Request, res: Response) => {
+const deleteTodo = async (req: Request, res: Response): Promise<void> => {
 	const todoId = req.params?.id;
 	if (!todoId || !mongoose.Types.ObjectId.isValid(todoId)) {
 		// BAD REQUEST
-		return res.status(400).json({
+		res.status(400).json({
 			success: false,
 			error: "Invalid todo id, unable to delete!",
 		});
+		return;
 	}
 	try {
 		const deletedTodo = await todoService.removeTodo(todoId);
 		if (!deletedTodo) {
-			return res.status(404).json({ success: false, message: "TODO not found!" });
+			res.status(404).json({
+				success: false,
+				message: "TODO not found!",
+			});
+			return;
 		}
-		res.status(200).json({ message: "Todo deleted successfully!", data: deletedTodo });
+		res.status(200).json({
+			message: "Todo deleted successfully!",
+			data: deletedTodo,
+		});
 	} catch (error) {
 		console.error(`Error occurred while deleting todo: ${error}`);
 		res.status(500).json({
@@ -156,4 +182,11 @@ const deleteTodo = async (req: Request, res: Response) => {
 	}
 };
 
-export default { createTodo, getTodos, getTodo, editTodo, replaceTodo, deleteTodo };
+export const todoHandlers = {
+	createTodo,
+	getTodos,
+	getTodo,
+	editTodo,
+	replaceTodo,
+	deleteTodo,
+};

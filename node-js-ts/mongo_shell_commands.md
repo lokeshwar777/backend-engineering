@@ -8,7 +8,7 @@
 - `use <databse name>`
 - `db.<database name>.find().pretty()`
 - `mongosh` or `mongo` - enter into mongodb shell
-- `db.auth("<username>", "<password>")` - returns whether the username and password are correct or not
+- `db.auth("<username>", "<password>")` - returns whether the username and password are correct or not, can also be used for auth inside shell
 - `db.dropUser("<username>")` - delete user with `username`
 - create user with permissions -
 
@@ -21,6 +21,13 @@
     ```
 
 - localhost exception - simply restart mongodb container
+- `show users` shows users created in that DB only
+- take back privileges
+  
+  ```mongodb
+    use <database name>;
+    db.revokeRolesFromUser("loki", [{ role: "root" | "dbOwner" | "readWrite", db: "<database name>" }])
+  ```
 
 ## executed
 
@@ -41,6 +48,6 @@
     db.createUser({
         user: "loki",
         pwd: "reddy",
-        roles: [{ role: "dbOwner", db: "admin" }]
+        roles: [{ role: "dbOwner", db: "admin" }, {role: "readWrite", db: "node-js-ts" }]
     })
     ```

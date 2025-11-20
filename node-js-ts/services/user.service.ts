@@ -4,7 +4,7 @@ const getUserProfile = async (userId: string): Promise<IUser> => {
 	// 1. check whether the user exists or not using id
 	// 2. fetch user profile data from DB/API/cookies with id
 	// 2. sent the data as response
-	const userData: IUser = await { id: "777" }; // sample
+	const userData: any = await { userId: "777" }; // sample
 	return userData;
 };
 

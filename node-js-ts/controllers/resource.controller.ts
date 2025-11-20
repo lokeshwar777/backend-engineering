@@ -15,7 +15,7 @@ const createResource = async (req: Request, res: Response): Promise<void> => {
 			data: newResource,
 		});
 	} catch (error) {
-		console.error(`Error occurred while creating a resource: ${error}`);
+		// console.error(`Error occurred while creating a resource: ${error}`);
 		res.status(500).json({
 			success: false,
 			error: "Error creating resource",
@@ -33,7 +33,7 @@ const getResources = async (req: Request, res: Response): Promise<void> => {
 			data: resources,
 		});
 	} catch (error) {
-		console.error(`Error occurred while fetching resources: ${error}`);
+		// console.error(`Error occurred while fetching resources: ${error}`);
 		res.status(500).json({
 			success: false,
 			error: "Error retrieving resources",
@@ -66,7 +66,7 @@ const getResource = async (req: Request, res: Response): Promise<void> => {
 			data: resource,
 		});
 	} catch (error) {
-		console.error(`Error occurred while fetching resources: ${error}`);
+		// console.error(`Error occurred while fetching resources: ${error}`);
 		res.status(500).json({
 			success: false,
 			error: "Error retrieving resources",
@@ -83,6 +83,7 @@ const editResource = async (req: Request, res: Response): Promise<void> => {
 			success: false,
 			error: "Invalid resource id, unable to edit!",
 		});
+		return;
 	}
 	const { title: newTitle, description: newDescription } = req.body;
 	try {
@@ -94,7 +95,7 @@ const editResource = async (req: Request, res: Response): Promise<void> => {
 		if (!editedResource) {
 			res.status(404).json({
 				success: false,
-				message: "TODO not found!",
+				message: "resource not found!",
 			});
 			return;
 		}
@@ -104,7 +105,7 @@ const editResource = async (req: Request, res: Response): Promise<void> => {
 			data: editedResource,
 		});
 	} catch (error) {
-		console.error(`Error occurred while editing resource: ${error}`);
+		// console.error(`Error occurred while editing resource: ${error}`);
 		res.status(500).json({
 			success: false,
 			error: "Error editing resource",
@@ -123,30 +124,47 @@ const replaceResource = async (req: Request, res: Response): Promise<void> => {
 		});
 		return;
 	}
-	const { title: newTitle, description: newDescription } = req.body;
+	const {
+		title: newTitle,
+		description: newDescription,
+		isCompleted: newIsCompleted,
+	} = req.body;
+	const missingFields: string[] = [];
+
+	if (!newTitle) missingFields.push("title");
+	if (!newDescription) missingFields.push("description");
+	if (!newIsCompleted) missingFields.push("isCompleted");
+	if (missingFields.length) {
+		// BAD REQUEST: MISSING FIELDS
+		res.status(400).json({
+			success: false,
+			error: `Missing fields for PUT : ${missingFields.join(", ")}`,
+		});
+		return;
+	}
 	try {
-		const editedResource = await resourceService.changeResource(
+		const replacedResource = await resourceService.changeResource(
 			resourceId,
-			newTitle,
-			newDescription,
+			newTitle ?? "",
+			newDescription ?? "",
 		);
-		if (!editedResource) {
+		if (!replacedResource) {
 			res.status(404).json({
 				success: false,
-				message: "TODO not found!",
+				message: "resource not found!",
 			});
 			return;
 		}
 		res.status(200).json({
 			success: true,
-			message: "Resource edited successfully!",
-			data: editedResource,
+			message: "Resource replaced successfully!",
+			data: replacedResource,
 		});
 	} catch (error) {
-		console.error(`Error occurred while editing resource: ${error}`);
+		// console.error(`Error occurred while replacing resource: ${error}`);
 		res.status(500).json({
 			success: false,
-			error: "Error editing resource",
+			error: "Error replacing resource",
 		});
 		throw error;
 	}
@@ -168,7 +186,7 @@ const deleteResource = async (req: Request, res: Response): Promise<void> => {
 		if (!deletedResource) {
 			res.status(404).json({
 				success: false,
-				message: "TODO not found!",
+				message: "resource not found!",
 			});
 			return;
 		}
@@ -177,7 +195,7 @@ const deleteResource = async (req: Request, res: Response): Promise<void> => {
 			data: deletedResource,
 		});
 	} catch (error) {
-		console.error(`Error occurred while deleting resource: ${error}`);
+		// console.error(`Error occurred while deleting resource: ${error}`);
 		res.status(500).json({
 			success: false,
 			error: "Error deleting resource",

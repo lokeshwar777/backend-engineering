@@ -1,23 +1,23 @@
-import {
+import type {
 	Document,
 	FlatRecord,
-	Model,
-	models,
-	Schema,
+	HydratedDocument,
 	SchemaOptions,
 	Types,
 } from "mongoose";
-import { IUser, Role } from "../types/user.interface.js";
+import { Model, models, Schema } from "mongoose";
+import type { IUser } from "../types/user.interface.js";
+import { Role } from "../types/user.interface.js";
 
 export interface IUserDocument extends Omit<IUser, "userId">, Document {
 	_id: Types.ObjectId;
 }
 
 const commonTransform = function (
-	originalDocument: any,
-	returnObject: Record<string, any>,
-	options: any,
-) {
+	_: HydratedDocument<IUserDocument>, // originalDocument
+	returnObject: Record<string, unknown>,
+	// ,options: any,
+): Record<string, unknown> {
 	returnObject.userId = returnObject._id;
 	delete returnObject.password;
 	delete returnObject.__v;

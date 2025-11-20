@@ -31,7 +31,7 @@ export const connectToDB = async (): Promise<typeof mongoose> => {
 	try {
 		DBConnection.conn = await DBConnection.promise;
 		console.log(
-			`Successfully connected to MongoDB 📦!!! \nDatabase name : ${DBConnection.conn.connection.name}`,
+			`Successfully connected to MongoDB 📦!!! \nDatabase : ${DBConnection.conn.connection.name} \nHost : ${DBConnection.conn.connection.host}`,
 		);
 
 		return DBConnection.conn;

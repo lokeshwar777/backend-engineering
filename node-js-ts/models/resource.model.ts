@@ -9,7 +9,7 @@ const resourceSchema = new mongoose.Schema(
 		description: {
 			type: String,
 			default: "",
-			maxLength: 50,
+			maxLength: 500,
 		},
 		isCompleted: {
 			type: Boolean,

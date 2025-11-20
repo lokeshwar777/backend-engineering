@@ -24,7 +24,8 @@ services:
       - mongo
 
     environment:
-      - MONGODB_URI=mongodb://${MONGODB_USERNAME}:${MONGODB_PASSWORD}@mongo:27017?authSource=admin
+      # - MONGODB_URI=${MONGO_ATLAS} # for atlas/ cloud mongo
+      - MONGODB_URI=${MONGO_LOCAL} # for local/docker mongo
 
   mongo:
     image: mongo:8.0.14-noble

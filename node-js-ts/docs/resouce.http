@@ -1,0 +1,41 @@
+# 127.0.0.1 or localhost can be used for hostname
+
+### get all resources
+GET http://127.0.0.1:3000/api/v1/resources HTTP/1.1
+
+### get resource by id
+# syntax GET http://127.0.0.1:3000/api/v1/resources/<id> HTTP/1.1
+GET http://127.0.0.1:3000/api/v1/resources/693c531a883db5abdc7540d6 HTTP/1.1
+
+
+### create a resource
+POST http://127.0.0.1:3000/api/v1/resources HTTP/1.1
+Content-Type: application/json
+
+{ 
+    "title" : "another tablet",
+    "description" : "PAN tablet:everday morning at 6:00AM" 
+}
+
+###  edit resouce by id
+# syntax PATCH http://127.0.0.1:3000/api/v1/resources/<id> HTTP/1.1
+PATCH  http://127.0.0.1:3000/api/v1/resources/693c53a1883db5abdc7540e2 HTTP/1.1
+Content-Type: application/json
+
+{ 
+    "title": "some tablet",
+    "description": "some description"
+}
+
+###  replace resouce by id
+# syntax PUT http://127.0.0.1:3000/api/v1/resources/<id> HTTP/1.1
+PUT  http://127.0.0.1:3000/api/v1/resources/693c53a1883db5abdc7540e2 HTTP/1.1
+
+{ 
+    "title": "some tablet",
+    "description": "new description"
+}
+
+###  delete resouce by id
+# syntax DELETE http://127.0.0.1:3000/api/v1/resources/<id> HTTP/1.1
+DELETE  http://127.0.0.1:3000/api/v1/resources/693c5406883db5abdc7540e8 HTTP/1.1

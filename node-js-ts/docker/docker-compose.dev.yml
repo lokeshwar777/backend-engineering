@@ -1,34 +1,21 @@
 services:
-  # service name
-  backend-dev:
-    # execute the Dockerfile at the context location till the target
+  api:
+    image: node-js-ts/api:dev
+    container_name: api-dev
     build:
-      context: .
+      context: ..
       target: dev
-    # map[host port]<->[container port]
     ports:
       - "3000:3000"
-    # mapping/linking directories & files for live changes
     volumes:
-      # mount cur dir from host with code inside container for live-reload
-      - .:/code # [host dir]: [container dir path]
-      # exception or not link, create anonymous volume for the specified path in container
+      - ..:/code
       - /code/node_modules
-    # env file location injected only during container runtime
-    env_file:
-      - .env
     depends_on:
       - mongo
-      # these overwrite env vars in `.env` file (no matter what the order of lines is)
-      # but conditional statements overwrite these
-      # environment:
-      # protocol://username:password@hostname:PORT?authentication
-      # - MONGODB_URI=${MONGO_ATLAS} # for atlas/ cloud mongo
-      # - MONGODB_URI=${MONGO_LOCAL} # for local/docker mongo
 
   mongo:
     image: mongo:8.0.14-noble
-    # redirect logging to a log file instead of displaying inside docker container
+    container_name: mongo-db-dev
     command: [ "mongod", "--quiet", "--logpath", "/data/db/mongo.log", "--logappend" ]
     environment:
       - MONGO_INITDB_ROOT_USERNAME=${MONGODB_USERNAME}
@@ -53,6 +40,5 @@ services:
         max_attempts: 3
         window: 1m
 
-# persist DB storage across containers
 volumes:
   mongo_data:

@@ -1,22 +1,41 @@
 services:
+
+  # service name
   backend-prod:
     image: node-js-ts/api:prod
     container_name: api-prod
+    # execute the Dockerfile at the context location till the target
     build:
       context: ..
       target: prod
+
+    # execute the Dockerfile at the context location completely
+    # build: .
+
+    # map[host port]<->[container port]
     ports:
       - "3000:3000"
+
+    # env file location injected only during container runtime
+    # env_file: # TODO: NOT WORKING, find out why? and the solution to it
+    #   - ../.env
+
     command: npm run start
+
     depends_on:
       - mongo
+
     environment:
-      - MONGODB_URI=${MONGO_LOCAL}
+      # - MONGODB_URI=${MONGO_ATLAS} # for atlas/ cloud mongo
+      - MONGODB_URI=${MONGO_LOCAL} # for local/docker mongo
 
   mongo:
     image: mongo:8.0.14-noble
     container_name: mongo-db-prod
+    # restart: always # simple but not recommended
+    ports: [] # "27017:27017" is not needed as backend can access it at mongo:27017
     environment:
+      # create the initial root user for MongoDB during first initialization
       - MONGO_INITDB_ROOT_USERNAME=${MONGODB_USERNAME}
       - MONGO_INITDB_ROOT_PASSWORD=${MONGODB_PASSWORD}
     volumes:
@@ -36,6 +55,8 @@ services:
         delay: 5s
         max_attempts: 3
         window: 1m
+    # TODO: NOT WORKING, find out why? and the solution to it
+    # env_file: ../.env
 
 volumes:
   mongo_data:

@@ -1,0 +1,64 @@
+services:
+  # service name
+  api:
+    image: node-js-ts/api:dev
+    container_name: api-dev
+    # execute the Dockerfile at the context location till the target
+    build:
+      context: .. # we are inside /docker so go up once there you can find Dockerfile
+      target: dev
+    # map[host port]<->[container port]
+    ports:
+      - "3000:3000"
+    # mapping/linking directories & files for live changes
+    volumes:
+      # mount cur dir from host with code inside container for live-reload
+      - ..:/code # [host dir]: [container dir path]
+      # exception or not link, create anonymous volume for the specified path in container
+      - /code/node_modules
+      # env file location injected only during container runtime
+      # env_file: # TODO: NOT WORKING, find out why? and the solution to it
+      # - ../.env # we are at /docker so go up for once there you can find .env
+    depends_on:
+      - mongo
+      # these overwrite env vars in `.env` file (no matter what the order of lines is)
+      # but conditional statements overwrite these
+      # environment:
+      # protocol://username:password@hostname:PORT?authentication
+      # - MONGODB_URI=${MONGO_ATLAS} # for atlas/ cloud mongo
+      # - MONGODB_URI=${MONGO_LOCAL} # for local/docker mongo
+
+  mongo:
+    image: mongo:8.0.14-noble
+    container_name: mongo-db-dev
+    # redirect logging to a log file instead of displaying inside docker container
+    command: [ "mongod", "--quiet", "--logpath", "/data/db/mongo.log", "--logappend" ]
+    # TODO: NOT WORKING, find out why? and the solution to it
+    # env_file: ../.env
+    environment:
+      # create the initial root user for MongoDB during first initialization
+      - MONGO_INITDB_ROOT_USERNAME=${MONGODB_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGODB_PASSWORD}
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: 3
+    deploy:
+      resources:
+        limits:
+          cpus: 0.5
+          memory: 512M
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 1m
+
+# persist DB storage across containers
+volumes:
+  mongo_data:
